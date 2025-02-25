@@ -6,11 +6,13 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma_client"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -23,4 +25,59 @@ model User {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  projects           Project[]
+  projectContributor ProjectContributor[]
+}
+
+model ProjectContributor {
+  User      User    @relation(fields: [userId], references: [id])
+  userId    String
+  Project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  @@id([userId, projectId])
+}
+
+model Project {
+  name        String
+  description String
+
+  id        String   @id
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  column ProjectColumn[]
+  User   User            @relation(fields: [userId], references: [id])
+  userId String
+
+  projectContributor ProjectContributor[]
+}
+
+model ProjectColumn {
+  name String
+
+  id        String   @id
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Project   Project @relation(fields: [projectId], references: [id])
+  projectId String
+
+  tasks Task[]
+}
+
+model Task {
+  title       String
+  description String
+
+  id        String   @id
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ProjectColumn   ProjectColumn @relation(fields: [projectColumnId], references: [id])
+  projectColumnId String
 }
