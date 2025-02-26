@@ -115,4 +115,24 @@ export class ProjectService {
 
     return column;
   }
+
+  async tasks(userId: string, projectId: string) {
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectId },
+    });
+
+    if (!project) {
+      return new NotFoundException("Project not found");
+    }
+
+    if (project.userId !== userId) {
+      return new UnauthorizedException("Invalid credentials");
+    }
+
+    const tasks = await this.prisma.project.findMany({
+      include: { column: { include: { tasks: true } } },
+    });
+
+    return tasks;
+  }
 }

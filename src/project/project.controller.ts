@@ -24,6 +24,15 @@ export class ProjectController {
     return this.projectService.index(user.userId);
   }
 
+  @Get("tasks/:projectId")
+  @UseGuards(JwtAuthGuard)
+  tasks(
+    @Param("projectId") projectId: string,
+    @CurrentUser() user: CurrentUserDto,
+  ) {
+    return this.projectService.tasks(user.userId, projectId);
+  }
+
   @Post("")
   @UseGuards(JwtAuthGuard)
   create(@CurrentUser() user: CurrentUserDto, @Body() body: ProjectDto) {
