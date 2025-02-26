@@ -12,7 +12,7 @@ import { CurrentUser } from "src/auth/current-user.decorator";
 import { CurrentUserDto } from "src/auth/current-user.dto";
 import { JwtAuthGuard } from "src/auth/jwt-auto.guard";
 import { ProjectService } from "./project.service";
-import { ProjectDto } from "./types";
+import { ProjectColumnDto, ProjectDto } from "./types";
 
 @Controller("project")
 export class ProjectController {
@@ -44,5 +44,14 @@ export class ProjectController {
   @UseGuards(JwtAuthGuard)
   inactivate(@Param("id") id: string, @CurrentUser() user: CurrentUserDto) {
     return this.projectService.inactivate(user.userId, id);
+  }
+
+  @Post("column")
+  @UseGuards(JwtAuthGuard)
+  createColumn(
+    @CurrentUser() user: CurrentUserDto,
+    @Body() body: ProjectColumnDto,
+  ) {
+    return this.projectService.createColumn(user.userId, body);
   }
 }

@@ -1,10 +1,11 @@
 import {
+  BadGatewayException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { PrismaService } from "prisma/prisma.service";
-import { ProjectDto } from "./types";
+import { ProjectColumnDto, ProjectDto } from "./types";
 import { v4 as uuidv4 } from "uuid";
 
 @Injectable()
@@ -13,7 +14,7 @@ export class ProjectService {
 
   async index(userId: string) {
     const projects = await this.prisma.project.findMany({
-      where: { userId },
+      where: { userId, active: true },
     });
 
     return projects;
@@ -21,6 +22,17 @@ export class ProjectService {
 
   async create(userId: string, project: ProjectDto) {
     const { description, name } = project;
+
+    const target = await this.prisma.project.findFirst({
+      where: { name, userId, active: true },
+    });
+
+    if (target) {
+      return new BadGatewayException(
+        "You already have a project with this name",
+      );
+    }
+
     const projectCreated = await this.prisma.project.create({
       data: { description, name, id: uuidv4(), userId },
     });
@@ -69,7 +81,7 @@ export class ProjectService {
     });
 
     if (!target) {
-      return new NotFoundException("Project nor found");
+      return new NotFoundException("Project not found");
     }
 
     if (target.userId !== userId) {
@@ -82,5 +94,25 @@ export class ProjectService {
     });
 
     return projectUpdated;
+  }
+
+  async createColumn(userId: string, projectColumn: ProjectColumnDto) {
+    const project = await this.prisma.project.findUnique({
+      where: { id: projectColumn.projectId },
+    });
+
+    if (!project) {
+      return new NotFoundException("Project not found");
+    }
+
+    if (project.userId !== userId) {
+      return new UnauthorizedException("Invalid credentials");
+    }
+
+    const column = await this.prisma.projectColumn.create({
+      data: { id: uuidv4(), name: projectColumn.name, projectId: project.id },
+    });
+
+    return column;
   }
 }

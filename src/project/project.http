@@ -1,6 +1,6 @@
 ### INDEX
 GET http://localhost:3000/project HTTP/1.1
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1c3Rhdm9nYWxvIiwic3ViIjoiM2QyYzdlNDctODgwNC00ZTdkLWExY2QtNmI5MmRkMTA0YzQ2IiwiaWF0IjoxNzQwNTI3MTMyLCJleHAiOjE3NDA1MzA3MzJ9.xO4Q3tfRYvja5dvSKh4Cbd9GRFEDmbLKhLUauB5UrEw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1c3Rhdm9nYWxvIiwic3ViIjoiM2QyYzdlNDctODgwNC00ZTdkLWExY2QtNmI5MmRkMTA0YzQ2IiwiaWF0IjoxNzQwNTMwOTcyLCJleHAiOjE3NDA1MzQ1NzJ9.VZMf_DJCcuVt6wdM8cYAzai_VJWXggxM6hpdCGycUbo
 
 ### CREATE
 POST http://localhost:3000/project HTTP/1.1
@@ -24,3 +24,13 @@ Content-Type: application/json
 ### INACTIVATE
 DELETE http://localhost:3000/project/aa9b0f21-ca84-4b16-9c58-3e735027c5b5 HTTP/1.1
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1c3Rhdm9nYWxvIiwic3ViIjoiM2QyYzdlNDctODgwNC00ZTdkLWExY2QtNmI5MmRkMTA0YzQ2IiwiaWF0IjoxNzQwNTI3MTMyLCJleHAiOjE3NDA1MzA3MzJ9.xO4Q3tfRYvja5dvSKh4Cbd9GRFEDmbLKhLUauB5UrEw
+
+### CREATE COLUMN
+POST http://localhost:3000/project/column HTTP/1.1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imd1c3Rhdm9nYWxvIiwic3ViIjoiM2QyYzdlNDctODgwNC00ZTdkLWExY2QtNmI5MmRkMTA0YzQ2IiwiaWF0IjoxNzQwNTMwOTcyLCJleHAiOjE3NDA1MzQ1NzJ9.VZMf_DJCcuVt6wdM8cYAzai_VJWXggxM6hpdCGycUbo
+Content-Type: application/json
+
+{
+  "name": "Column #1",
+  "projectId": "aa9b0f21-ca84-4b16-9c58-3e735027c5b5"
+}
