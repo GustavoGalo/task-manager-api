@@ -18,7 +18,7 @@ export class TaskService {
     });
 
     if (!projectColumn) {
-      return new NotFoundException("Column not found");
+      throw new NotFoundException("Column not found");
     }
 
     const project = await this.prisma.project.findUnique({
@@ -26,11 +26,11 @@ export class TaskService {
     });
 
     if (!project) {
-      return new NotFoundException("Project not found");
+      throw new NotFoundException("Project not found");
     }
 
     if (project.userId !== userId) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const createdTask = await this.prisma.task.create({

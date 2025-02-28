@@ -28,7 +28,7 @@ export class ProjectService {
     });
 
     if (target) {
-      return new BadGatewayException(
+      throw new BadGatewayException(
         "You already have a project with this name",
       );
     }
@@ -52,11 +52,11 @@ export class ProjectService {
     });
 
     if (!target) {
-      return new NotFoundException("Project nor found");
+      throw new NotFoundException("Project not found");
     }
 
     if (target.userId !== userId) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     if (project.description) {
@@ -81,11 +81,11 @@ export class ProjectService {
     });
 
     if (!target) {
-      return new NotFoundException("Project not found");
+      throw new NotFoundException("Project not found");
     }
 
     if (target.userId !== userId) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const projectUpdated = await this.prisma.project.update({
@@ -102,11 +102,11 @@ export class ProjectService {
     });
 
     if (!project) {
-      return new NotFoundException("Project not found");
+      throw new NotFoundException("Project not found");
     }
 
     if (project.userId !== userId) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const column = await this.prisma.projectColumn.create({
@@ -122,11 +122,11 @@ export class ProjectService {
     });
 
     if (!project) {
-      return new NotFoundException("Project not found");
+      throw new NotFoundException("Project not found");
     }
 
     if (project.userId !== userId) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const tasks = await this.prisma.project.findMany({

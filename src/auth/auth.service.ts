@@ -28,7 +28,7 @@ export class AuthService {
       where: { email },
     });
     if (existingUser) {
-      return new BadRequestException("Email in use");
+      throw new BadRequestException("Email in use");
     }
 
     const salt = randomBytes(8).toString("hex");
@@ -55,14 +55,14 @@ export class AuthService {
   async signIn(email: string, password: string) {
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const [salt, storedHash] = user.password.split(".");
     const hash = (await scrypt(password, salt, 32)) as Buffer;
 
     if (storedHash != hash.toString("hex")) {
-      return new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException("Invalid credentials");
     }
 
     const payload = { username: user.username, sub: user.id };
