@@ -4,9 +4,9 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { PrismaService } from "prisma/prisma.service";
 import { ProjectColumnDto, ProjectDto } from "./types";
 import { v4 as uuidv4 } from "uuid";
+import { PrismaService } from "src/infra/prisma.service";
 
 @Injectable()
 export class ProjectService {

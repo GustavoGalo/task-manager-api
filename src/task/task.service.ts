@@ -3,10 +3,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { PrismaService } from "prisma/prisma.service";
 import { v4 as uuidv4 } from "uuid";
 
 import { TaskDto } from "./types";
+import { PrismaService } from "src/infra/prisma.service";
 
 @Injectable()
 export class TaskService {

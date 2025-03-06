@@ -7,14 +7,12 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post("signup")
-  signUp(@Body() body: SignUpInput) {
-    const { email, password, name, username } = body;
-    return this.authService.signUp(email, password, name, username);
+  signUp(@Body() { email, password, name, username }: SignUpInput) {
+    return this.authService.signUp({ email, password, name, username });
   }
 
   @Post("signin")
-  signIn(@Body() body: SignInInput) {
-    const { email, password } = body;
-    return this.authService.signIn(email, password);
+  signIn(@Body() { email, password }: SignInInput) {
+    return this.authService.signIn({ email, password });
   }
 }

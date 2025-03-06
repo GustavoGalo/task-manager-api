@@ -5,9 +5,10 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { randomBytes, scrypt as _scrypt } from "crypto";
-import { PrismaService } from "prisma/prisma.service";
 import { promisify } from "util";
 import { v4 as uuidv4 } from "uuid";
+import { SignInInput, SignUpInput } from "./types";
+import { PrismaService } from "src/infra/prisma.service";
 
 const scrypt = promisify(_scrypt);
 
@@ -18,12 +19,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(
-    email: string,
-    password: string,
-    name: string,
-    username: string,
-  ) {
+  async signUp(body: SignUpInput) {
+    const { email, password, username, name } = body;
     const existingUser = await this.prisma.user.findUnique({
       where: { email },
     });
@@ -52,7 +49,8 @@ export class AuthService {
     };
   }
 
-  async signIn(email: string, password: string) {
+  async signIn(body: SignInInput) {
+    const { email, password } = body;
     const user = await this.prisma.user.findUnique({ where: { email } });
     if (!user) {
       throw new UnauthorizedException("Invalid credentials");
