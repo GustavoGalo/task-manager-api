@@ -1,0 +1,19 @@
+
+### SIGN IN
+POST http://localhost:3000/auth/signIn HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "gg.gustavo.galo@gmail.com",
+  "password": "123456"
+}
+### SIGN UP
+POST http://localhost:3000/auth/signUp HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "gustavogalo@gmail.comd",
+  "password": "123456",
+  "name": "galo",
+  "username": "galo"
+}

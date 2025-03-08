@@ -1,9 +1,8 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AuthModule } from "./auth/auth.module";
+import { AuthModule } from "./app/auth/auth.module";
 import { ConfigModule } from "@nestjs/config";
-import { ProjectModule } from "./project/project.module";
-import { TaskModule } from "./task/task.module";
+import { ProjectModule } from "./app/project/project.module";
+import { TaskModule } from "./app/task/task.module";
 
 @Module({
   imports: [
@@ -12,6 +11,5 @@ import { TaskModule } from "./task/task.module";
     ProjectModule,
     TaskModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}
