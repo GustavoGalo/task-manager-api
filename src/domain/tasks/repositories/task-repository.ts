@@ -1,4 +1,4 @@
-import { Task } from "generated/prisma_client";
+import { Task } from "../entities/task-entity";
 
 export interface TaskRepository {
   findMany(projectId: string): Promise<Task[]>;
