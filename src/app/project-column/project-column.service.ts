@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { plainToInstance } from "class-transformer";
 import { ErrorMessages } from "src/domain/errors/error-messages";
 import { CreateProjectColumnDto } from "src/domain/project/dto/create-project-column-dto";
 import { PrismaProjectColumnRepository } from "src/infra/repositories/prisma-project-column-repository";
@@ -36,6 +37,6 @@ export class ProjectColumnService {
       projectId: project.id,
     });
 
-    return column;
+    return plainToInstance(CreateProjectColumnDto, column);
   }
 }

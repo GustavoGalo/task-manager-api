@@ -8,6 +8,9 @@ import { PrismaProjectRepository } from "src/infra/repositories/prisma-project-r
 import { CreateProjectDto } from "src/domain/project/dto/create-project-dto";
 import { generateId } from "src/utils/generate-id";
 import { UpdateProjectDto } from "src/domain/project/dto/update-project-dto";
+import { ErrorMessages } from "src/domain/errors/error-messages";
+import { plainToInstance } from "class-transformer";
+import { ProjectResponseDto } from "src/domain/project/dto/project-response-dto";
 
 @Injectable()
 export class ProjectService {
@@ -25,9 +28,7 @@ export class ProjectService {
     const target = await this.projectRepository.findByName(userId, name);
 
     if (target) {
-      throw new BadGatewayException(
-        "You already have a project with this name",
-      );
+      throw new BadGatewayException(ErrorMessages.PROJECT.NAME_ALREADY_EXISTS);
     }
 
     const projectId = generateId();
@@ -36,12 +37,9 @@ export class ProjectService {
       name,
       id: projectId,
       userId,
-      active: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
-    return projectCreated;
+    return plainToInstance(ProjectResponseDto, projectCreated);
   }
 
   async update(
@@ -52,11 +50,11 @@ export class ProjectService {
     const target = await this.projectRepository.findById(projectId);
 
     if (!target) {
-      throw new NotFoundException("Project not found");
+      throw new NotFoundException(ErrorMessages.PROJECT.NOT_FOUND);
     }
 
     if (target.userId !== userId) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(ErrorMessages.AUTH.INVALID_CREDENTIALS);
     }
 
     const projectUpdated = await this.projectRepository.update(
@@ -64,24 +62,24 @@ export class ProjectService {
       project,
     );
 
-    return projectUpdated;
+    return plainToInstance(ProjectResponseDto, projectUpdated);
   }
 
   async inactivate(userId: string, projectId: string) {
     const target = await this.projectRepository.findById(projectId);
 
     if (!target) {
-      throw new NotFoundException("Project not found");
+      throw new NotFoundException(ErrorMessages.PROJECT.NOT_FOUND);
     }
 
     if (target.userId !== userId) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(ErrorMessages.AUTH.INVALID_CREDENTIALS);
     }
 
     const projectUpdated = await this.projectRepository.update(projectId, {
       active: false,
     });
 
-    return projectUpdated;
+    return plainToInstance(ProjectResponseDto, projectUpdated);
   }
 }

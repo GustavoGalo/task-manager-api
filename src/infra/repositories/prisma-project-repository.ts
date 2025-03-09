@@ -2,12 +2,13 @@ import { ProjectRepository } from "src/domain/project/repositories/project-repos
 import { PrismaService } from "../prisma.service";
 import { Project } from "src/domain/project/entities/project-entity";
 import { Injectable } from "@nestjs/common";
+import { CreateProject } from "src/domain/project/entities/create-project";
 
 @Injectable()
 export class PrismaProjectRepository implements ProjectRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(project: Project): Promise<Project> {
+  async create(project: CreateProject): Promise<Project> {
     return await this.prisma.project.create({
       data: project,
     });
