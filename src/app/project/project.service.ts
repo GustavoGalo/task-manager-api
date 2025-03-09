@@ -8,15 +8,10 @@ import { PrismaProjectRepository } from "src/infra/repositories/prisma-project-r
 import { CreateProjectDto } from "src/domain/project/dto/create-project-dto";
 import { generateId } from "src/utils/generate-id";
 import { UpdateProjectDto } from "src/domain/project/dto/update-project-dto";
-import { PrismaProjectColumnRepository } from "src/infra/repositories/prisma-project-column-repository";
-import { CreateProjectColumnDto } from "src/domain/project/dto/create-project-column-dto";
 
 @Injectable()
 export class ProjectService {
-  constructor(
-    private readonly projectRepository: PrismaProjectRepository,
-    private readonly projectColumnRepository: PrismaProjectColumnRepository,
-  ) {}
+  constructor(private readonly projectRepository: PrismaProjectRepository) {}
 
   async index(userId: string) {
     const projects = await this.projectRepository.findMany(userId);
@@ -88,31 +83,5 @@ export class ProjectService {
     });
 
     return projectUpdated;
-  }
-
-  async createColumn(userId: string, projectColumn: CreateProjectColumnDto) {
-    const project = await this.projectRepository.findById(
-      projectColumn.projectId,
-    );
-
-    if (!project) {
-      throw new NotFoundException("Project not found");
-    }
-
-    if (project.userId !== userId) {
-      throw new UnauthorizedException("Invalid credentials");
-    }
-
-    const projectColumnId = generateId();
-    const column = await this.projectColumnRepository.create({
-      id: projectColumnId,
-      name: projectColumn.name,
-      projectId: project.id,
-      active: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    });
-
-    return column;
   }
 }

@@ -15,10 +15,14 @@ import { CurrentUserDto } from "src/domain/auth/dto/current-user-dto";
 import { CreateProjectDto } from "src/domain/project/dto/create-project-dto";
 import { UpdateProjectDto } from "src/domain/project/dto/update-project-dto";
 import { CreateProjectColumnDto } from "src/domain/project/dto/create-project-column-dto";
+import { ProjectColumnService } from "../project-column/project-column.service";
 
 @Controller("project")
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly projectColumnService: ProjectColumnService,
+  ) {}
 
   @Get("")
   @UseGuards(JwtAuthGuard)
@@ -54,6 +58,6 @@ export class ProjectController {
     @CurrentUser() user: CurrentUserDto,
     @Body() body: CreateProjectColumnDto,
   ) {
-    return this.projectService.createColumn(user.userId, body);
+    return this.projectColumnService.create(user.userId, body);
   }
 }
