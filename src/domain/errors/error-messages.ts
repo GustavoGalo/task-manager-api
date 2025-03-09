@@ -7,4 +7,8 @@ export const ErrorMessages = {
     NOT_FOUND: "Project not found",
     NAME_ALREADY_EXISTS: "You already have a project with this name",
   },
+  TASK: {
+    COLUMN_NOT_FOUND: "Column not found",
+    PROJECT_NOT_FOUND: "Project not found",
+  },
 };

@@ -9,6 +9,9 @@ import { PrismaProjectColumnRepository } from "src/infra/repositories/prisma-pro
 import { PrismaTaskRepository } from "src/infra/repositories/prisma-task-repository";
 import { CreateTaskDto } from "src/domain/tasks/dto/create-task-dto";
 import { PrismaProjectRepository } from "src/infra/repositories/prisma-project-repository";
+import { ErrorMessages } from "src/domain/errors/error-messages";
+import { plainToInstance } from "class-transformer";
+import { ResponseTaskDto } from "src/domain/tasks/dto/task-response-dto";
 
 @Injectable()
 export class TaskService {
@@ -24,13 +27,13 @@ export class TaskService {
     );
 
     if (!projectColumn) {
-      throw new NotFoundException("Column not found");
+      throw new NotFoundException(ErrorMessages.TASK.COLUMN_NOT_FOUND);
     }
 
     const project = await this.projectRepository.findById(projectColumn.id);
 
     if (project?.userId !== userId) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(ErrorMessages.AUTH.INVALID_CREDENTIALS);
     }
 
     const taskId = generateId();
@@ -39,23 +42,20 @@ export class TaskService {
       description: task.description,
       title: task.title,
       projectColumnId: projectColumn.id,
-      active: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
-    return createdTask;
+    return plainToInstance(ResponseTaskDto, createdTask);
   }
 
   async tasks(userId: string, projectId: string) {
     const project = await this.projectRepository.findById(projectId);
 
     if (!project) {
-      throw new NotFoundException("Project not found");
+      throw new NotFoundException(ErrorMessages.TASK.PROJECT_NOT_FOUND);
     }
 
     if (project.userId !== userId) {
-      throw new UnauthorizedException("Invalid credentials");
+      throw new UnauthorizedException(ErrorMessages.AUTH.INVALID_CREDENTIALS);
     }
 
     const tasks = await this.taskRepository.findMany(projectId);

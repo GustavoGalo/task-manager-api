@@ -2,6 +2,7 @@ import { TaskRepository } from "src/domain/tasks/repositories/task-repository";
 import { PrismaService } from "../prisma.service";
 import { Task } from "src/domain/tasks/entities/task-entity";
 import { Injectable } from "@nestjs/common";
+import { CreateTask } from "src/domain/tasks/entities/create-task";
 
 @Injectable()
 export class PrismaTaskRepository implements TaskRepository {
@@ -19,7 +20,7 @@ export class PrismaTaskRepository implements TaskRepository {
     });
   }
 
-  async create(task: Task): Promise<Task> {
+  async create(task: CreateTask): Promise<Task> {
     return await this.prisma.task.create({
       data: task,
     });
