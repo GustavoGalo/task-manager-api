@@ -4,22 +4,21 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { randomBytes, scrypt as _scrypt } from "crypto";
-import { promisify } from "util";
-import { PrismaService } from "src/infra/prisma.service";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { generateId } from "src/utils/generate-id";
 import { CreateUserDto } from "src/domain/users/dto/create-user-dto";
 import { LoginDto } from "src/domain/auth/dto/login-dto";
-
-const scrypt = promisify(_scrypt);
+import { PasswordService } from "./password.service";
+import { ErrorMessages } from "src/domain/errors/error-messages";
+import { plainToInstance } from "class-transformer";
+import { UserResponseDto } from "src/domain/users/dto/user-response-dto";
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
     private readonly repository: PrismaUserRepository,
+    private readonly passwordService: PasswordService,
   ) {}
 
   async signUp(body: CreateUserDto) {
@@ -27,47 +26,37 @@ export class AuthService {
     const existingUser = await this.repository.findByEmail(email);
 
     if (existingUser) {
-      throw new BadRequestException("Email in use");
+      throw new BadRequestException(ErrorMessages.AUTH.EMAIL_IN_USE);
     }
 
-    const salt = randomBytes(8).toString("hex");
-    const hash = (await scrypt(password, salt, 32)) as Buffer;
-    const saltAndHash = `${salt}.${hash.toString("hex")}`;
-
+    const hashedPassword = await this.passwordService.hashPassword(password);
     const userID = generateId();
     const newUser = await this.repository.create({
       email,
-      password: saltAndHash,
+      password: hashedPassword,
       name,
       username,
       id: userID,
-      active: true,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
 
-    return {
-      email: newUser.email,
-      name: newUser.name,
-      username: newUser.username,
-    };
+    return plainToInstance(UserResponseDto, newUser);
   }
 
   async signIn(body: LoginDto) {
     const { email, password } = body;
-    const user = await this.prisma.user.findUnique({ where: { email } });
-    if (!user) {
-      throw new UnauthorizedException("Invalid credentials");
+    const existingUser = await this.repository.findByEmail(email);
+
+    if (
+      !existingUser ||
+      !(await this.passwordService.comparePassword(
+        password,
+        existingUser.password,
+      ))
+    ) {
+      throw new UnauthorizedException(ErrorMessages.AUTH.INVALID_CREDENTIALS);
     }
 
-    const [salt, storedHash] = user.password.split(".");
-    const hash = (await scrypt(password, salt, 32)) as Buffer;
-
-    if (storedHash != hash.toString("hex")) {
-      throw new UnauthorizedException("Invalid credentials");
-    }
-
-    const payload = { username: user.username, sub: user.id };
+    const payload = { username: existingUser.username, sub: existingUser.id };
 
     return {
       token: this.jwtService.sign(payload),
