@@ -22,4 +22,15 @@ export class PrismaUserRepository implements UserRepository {
       },
     });
   }
+
+  async profile(id: string): Promise<User | null> {
+    return await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        projects: true,
+      },
+    });
+  }
 }

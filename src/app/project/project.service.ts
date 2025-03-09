@@ -1,5 +1,5 @@
 import {
-  BadGatewayException,
+  BadRequestException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -28,7 +28,7 @@ export class ProjectService {
     const target = await this.projectRepository.findByName(userId, name);
 
     if (target) {
-      throw new BadGatewayException(ErrorMessages.PROJECT.NAME_ALREADY_EXISTS);
+      throw new BadRequestException(ErrorMessages.PROJECT.NAME_ALREADY_EXISTS);
     }
 
     const projectId = generateId();
