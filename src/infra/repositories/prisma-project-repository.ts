@@ -1,7 +1,9 @@
 import { ProjectRepository } from "src/domain/project/repositories/project-repository";
 import { PrismaService } from "../prisma.service";
 import { Project } from "src/domain/project/entities/project-entity";
+import { Injectable } from "@nestjs/common";
 
+@Injectable()
 export class PrismaProjectRepository implements ProjectRepository {
   constructor(private readonly prisma: PrismaService) {}
 
