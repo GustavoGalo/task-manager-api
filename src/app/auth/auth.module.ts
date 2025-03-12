@@ -8,6 +8,7 @@ import { JwtStrategy } from "./jwt.strategy";
 import { PrismaService } from "src/infra/prisma.service";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { PasswordService } from "./password.service";
+import { NodemailerEmailService } from "src/infra/email.service";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { PasswordService } from "./password.service";
     PrismaService,
     JwtStrategy,
     PrismaUserRepository,
+    NodemailerEmailService,
   ],
   exports: [JwtStrategy],
   controllers: [AuthController],
