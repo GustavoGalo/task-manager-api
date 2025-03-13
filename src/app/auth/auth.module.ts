@@ -10,6 +10,7 @@ import { PasswordService } from "./password.service";
 import { EmailService } from "src/infra/email/email.service";
 import { QueryHandlers } from "./queries";
 import { CqrsModule } from "@nestjs/cqrs";
+import { EventHandlers } from "./events";
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { CqrsModule } from "@nestjs/cqrs";
     PrismaUserRepository,
     EmailService,
     ...QueryHandlers,
+    ...EventHandlers,
   ],
   exports: [JwtStrategy],
   controllers: [AuthController],

@@ -20,6 +20,9 @@ model User {
   password String
   username String
 
+  confirmationCode          String?
+  confirmationCodeExpiresAt DateTime?
+
   id        String   @id
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
