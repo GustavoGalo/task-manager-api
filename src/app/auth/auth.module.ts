@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtModule } from "@nestjs/jwt";
 import { ConfigService } from "@nestjs/config";
@@ -9,9 +8,12 @@ import { PrismaService } from "src/infra/prisma.service";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { PasswordService } from "./password.service";
 import { EmailService } from "src/infra/email/email.service";
+import { QueryHandlers } from "./queries";
+import { CqrsModule } from "@nestjs/cqrs";
 
 @Module({
   imports: [
+    CqrsModule,
     PassportModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -22,12 +24,12 @@ import { EmailService } from "src/infra/email/email.service";
     }),
   ],
   providers: [
-    AuthService,
     PasswordService,
     PrismaService,
     JwtStrategy,
     PrismaUserRepository,
     EmailService,
+    ...QueryHandlers,
   ],
   exports: [JwtStrategy],
   controllers: [AuthController],
