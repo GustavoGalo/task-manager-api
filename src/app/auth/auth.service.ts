@@ -12,6 +12,7 @@ import { PasswordService } from "./password.service";
 import { ErrorMessages } from "src/domain/errors/error-messages";
 import { plainToInstance } from "class-transformer";
 import { UserResponseDto } from "src/domain/users/dto/user-response-dto";
+import { EmailService } from "src/infra/email/email.service";
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly repository: PrismaUserRepository,
     private readonly passwordService: PasswordService,
+    private readonly emailService: EmailService,
   ) {}
 
   async signUp(body: CreateUserDto) {
@@ -38,6 +40,8 @@ export class AuthService {
       username,
       id: userID,
     });
+
+    await this.emailService.sendSignUpEmail({ code: "12312", email });
 
     return plainToInstance(UserResponseDto, newUser);
   }

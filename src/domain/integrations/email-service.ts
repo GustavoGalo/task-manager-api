@@ -1,3 +1,3 @@
 export interface EmailService {
-  sendEmail(to: string, subject: string, body: string): Promise<void>;
+  sendSignUpEmail(data: { email: string; code: string }): Promise<void>;
 }
