@@ -11,9 +11,13 @@ import { EmailService } from "src/infra/email/email.service";
 import { QueryHandlers } from "./queries";
 import { CqrsModule } from "@nestjs/cqrs";
 import { EventHandlers } from "./events";
+import { BullModule } from "@nestjs/bull";
 
 @Module({
   imports: [
+    BullModule.registerQueue({
+      name: "email",
+    }),
     CqrsModule,
     PassportModule,
     JwtModule.registerAsync({
