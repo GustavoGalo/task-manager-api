@@ -2,6 +2,7 @@ export const ErrorMessages = {
   AUTH: {
     EMAIL_IN_USE: "Email already in use",
     INVALID_CREDENTIALS: "Invalid credentials",
+    PASSWORD_WEAK: "Password is too weak",
   },
   PROJECT: {
     NOT_FOUND: "Project not found",

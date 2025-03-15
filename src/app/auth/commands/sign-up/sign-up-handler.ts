@@ -24,6 +24,10 @@ export class SignUpHandler implements ICommandHandler<SignUpCommand, void> {
       throw new BadRequestException(ErrorMessages.AUTH.EMAIL_IN_USE);
     }
 
+    if (!this.passwordService.validatePasswordStrength(password)) {
+      throw new BadRequestException(ErrorMessages.AUTH.PASSWORD_WEAK);
+    }
+
     const hashedPassword = await this.passwordService.hashPassword(password);
     const userID = generateId();
     const confirmationCode = generateRandomCode();
