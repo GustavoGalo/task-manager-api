@@ -1,4 +1,4 @@
-export class SignInQuery {
+export class SignInCommand {
   email: string;
   password: string;
 }

@@ -8,10 +8,10 @@ import { PrismaService } from "src/infra/prisma.service";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { PasswordService } from "./password.service";
 import { EmailService } from "src/infra/email/email.service";
-import { QueryHandlers } from "./queries";
 import { CqrsModule } from "@nestjs/cqrs";
 import { EventHandlers } from "./events";
 import { BullModule } from "@nestjs/bull";
+import { CommandHandlers } from "./commands";
 
 @Module({
   imports: [
@@ -34,8 +34,8 @@ import { BullModule } from "@nestjs/bull";
     JwtStrategy,
     PrismaUserRepository,
     EmailService,
-    ...QueryHandlers,
     ...EventHandlers,
+    ...CommandHandlers,
   ],
   exports: [JwtStrategy],
   controllers: [AuthController],

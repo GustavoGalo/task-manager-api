@@ -1,25 +1,25 @@
-import { IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { SignInQuery } from "./sign-in-query";
+import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { PasswordService } from "../../password.service";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { ErrorMessages } from "src/domain/errors/error-messages";
 import { UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
+import { SignInCommand } from "./sign-in-command";
 
 interface Output {
   token: string;
 }
 
-@QueryHandler(SignInQuery)
-export class SignInHandler implements IQueryHandler<SignInQuery, Output> {
+@CommandHandler(SignInCommand)
+export class SignInHandler implements ICommandHandler<SignInCommand, Output> {
   constructor(
     private readonly repository: PrismaUserRepository,
     private readonly passwordService: PasswordService,
     private readonly jwtService: JwtService,
   ) {}
 
-  async execute(query: SignInQuery): Promise<Output> {
-    const { email, password } = query;
+  async execute(command: SignInCommand): Promise<Output> {
+    const { email, password } = command;
     const existingUser = await this.repository.findByEmail(email);
 
     if (

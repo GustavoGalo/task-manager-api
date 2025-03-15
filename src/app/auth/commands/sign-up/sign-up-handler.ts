@@ -1,23 +1,23 @@
 import { BadRequestException } from "@nestjs/common";
-import { EventBus, IQueryHandler, QueryHandler } from "@nestjs/cqrs";
-import { SignUpQuery } from "src/app/auth/queries/sign-up/sign-up-query";
+import { CommandHandler, EventBus, ICommandHandler } from "@nestjs/cqrs";
 import { ErrorMessages } from "src/domain/errors/error-messages";
 import { PrismaUserRepository } from "src/infra/repositories/prisma-user-repository";
 import { PasswordService } from "../../password.service";
 import { generateId } from "src/utils/generate-id";
 import { UserSignedUpEvent } from "../../events/user-signed-up/user-signed-up-event";
 import { generateRandomCode } from "src/utils/generate-random-code";
+import { SignUpCommand } from "./sign-up-command";
 
-@QueryHandler(SignUpQuery)
-export class SignUpHandler implements IQueryHandler<SignUpQuery, void> {
+@CommandHandler(SignUpCommand)
+export class SignUpHandler implements ICommandHandler<SignUpCommand, void> {
   constructor(
     private readonly repository: PrismaUserRepository,
     private readonly passwordService: PasswordService,
     private readonly eventBus: EventBus,
   ) {}
 
-  async execute(query: SignUpQuery) {
-    const { email, password, username, name } = query;
+  async execute(command: SignUpCommand) {
+    const { email, password, username, name } = command;
     const existingUser = await this.repository.findByEmail(email);
 
     if (existingUser) {
