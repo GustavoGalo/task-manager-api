@@ -7,6 +7,10 @@ import { SignUpCommand } from "./commands/sign-up/sign-up-command";
 import { SignInCommand } from "./commands/sign-in/sign-in-command";
 import { Response } from "express";
 import { ConfirmEmailCommand } from "./commands/confirm-email/confirm-email-command";
+import { ForgotPasswordDto } from "src/domain/auth/dto/forgot-password-dto";
+import { ForgotPasswordCommand } from "./commands/forgot-password/forgot-password-command";
+import { ResetPasswordDto } from "src/domain/auth/dto/reset-password-dto";
+import { ResetPasswordCommand } from "./commands/reset-password/reset-password-command";
 
 @Controller("auth")
 export class AuthController {
@@ -34,5 +38,17 @@ export class AuthController {
     });
     await this.commandBus.execute(command);
     return res.status(302).redirect(`${process.env.FRONT_URL}/login`);
+  }
+
+  @Post("forgot-password")
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    const command = plainToClass(ForgotPasswordCommand, body);
+    return await this.commandBus.execute(command);
+  }
+
+  @Post("reset-password/:resetToken")
+  async resetPassword(@Param("resetToken") resetToken: string, @Body() body: ResetPasswordDto) {
+    const command = plainToClass(ResetPasswordCommand, { resetToken, password: body.password });
+    return await this.commandBus.execute(command);
   }
 }

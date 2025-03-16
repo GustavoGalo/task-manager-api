@@ -6,6 +6,8 @@ export const ErrorMessages = {
     USER_NOT_FOUND: "User not found",
     CONFIRMATION_CODE_EXPIRED: "Confirmation code expired",
     INVALID_CONFIRMATION_TOKEN: "Invalid confirmation token",
+    RESET_PASSWORD_TOKEN_EXPIRED: "Reset password token expired",
+    INVALID_RESET_PASSWORD_TOKEN: "Invalid reset password token",
   },
   PROJECT: {
     NOT_FOUND: "Project not found",

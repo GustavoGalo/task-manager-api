@@ -3,4 +3,9 @@ export interface EmailService {
     email: string;
     confirmation_link: string;
   }): Promise<void>;
+
+  sendForgotPasswordEmail(data: {
+    email: string;
+    reset_link: string;
+  }): Promise<void>;
 }

@@ -21,4 +21,20 @@ export class EmailService implements EmailServiceInterface {
       },
     });
   }
+
+  async sendForgotPasswordEmail(data: {
+    email: string;
+    reset_link: string;
+  }): Promise<void> {
+    const { reset_link, email } = data;
+
+    await this.mailerService.sendMail({
+      to: email,
+      subject: "Reset Password",
+      template: "./forgot-password",
+      context: {
+        reset_link,
+      },
+    });
+  }
 }

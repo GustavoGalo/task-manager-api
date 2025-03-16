@@ -17,10 +17,10 @@ export class UserSignedUpSendEmailEventHandler
   ) {}
 
   async handle(event: UserSignedUpEvent): Promise<void> {
-    await this.queue.add("email", event);
+    await this.queue.add("user-signed-up", event);
   }
 
-  @Process("email")
+  @Process("user-signed-up")
   async process(job: Job<UserSignedUpEvent>) {
     const event = job.data;
     const confirmation_link = `${this.configService.getOrThrow("FRONTEND_URL")}/confirm-email/${event.confirmationToken}`;
