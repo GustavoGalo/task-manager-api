@@ -16,21 +16,25 @@ export class ConfirmEmailHandler
   ) {}
 
   async execute(command: ConfirmEmailCommand) {
+    const { confirmationToken } = command;
+    let email: string;
+
     try {
-      const { confirmationToken } = command;
-      const { email } = this.jwtService.verify(confirmationToken);
-      const user = await this.userRepository.findByEmail(email as string);
-
-      if (!user) {
-        throw new NotFoundException(ErrorMessages.AUTH.USER_NOT_FOUND);
-      }
-
-      await this.userRepository.save({ ...user, active: true });
+      const decoded = this.jwtService.verify(confirmationToken);
+      email = decoded.email as string;
     } catch (error) {
       if (error instanceof JsonWebTokenError) {
         throw new BadRequestException(ErrorMessages.AUTH.CONFIRMATION_CODE_EXPIRED);
       }
       throw new BadRequestException(ErrorMessages.AUTH.INVALID_CONFIRMATION_TOKEN);
     }
+
+    const user = await this.userRepository.findByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException(ErrorMessages.AUTH.USER_NOT_FOUND);
+    }
+
+    await this.userRepository.save({ ...user, active: true });
   }
 }
