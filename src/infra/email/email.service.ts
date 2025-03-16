@@ -6,15 +6,18 @@ import { EmailService as EmailServiceInterface } from "src/domain/integrations/e
 export class EmailService implements EmailServiceInterface {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendSignUpEmail(data: { email: string; code: string }): Promise<void> {
-    const { code, email } = data;
+  async sendSignUpEmail(data: {
+    email: string;
+    confirmation_link: string;
+  }): Promise<void> {
+    const { confirmation_link, email } = data;
 
     await this.mailerService.sendMail({
       to: email,
       subject: "Welcome to our platform!",
       template: "./sign-up",
       context: {
-        code,
+        confirmation_link,
       },
     });
   }

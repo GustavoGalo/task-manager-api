@@ -6,7 +6,10 @@
     "deleteOutDir": true,
     "watchAssets": true,
     "assets": [
-      "infra/email/templates/**/*"
+      {
+        "include": "infra/email/templates/**/*",
+        "outDir": "dist/src"
+      }
     ]
   }
 }

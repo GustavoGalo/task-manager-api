@@ -1,3 +1,6 @@
 export interface EmailService {
-  sendSignUpEmail(data: { email: string; code: string }): Promise<void>;
+  sendSignUpEmail(data: {
+    email: string;
+    confirmation_link: string;
+  }): Promise<void>;
 }
