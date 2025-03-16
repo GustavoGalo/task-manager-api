@@ -4,6 +4,4 @@ export class CreateUser {
   email: string;
   password: string;
   username: string;
-  confirmationCode: string;
-  confirmationCodeExpiresAt: Date;
 }

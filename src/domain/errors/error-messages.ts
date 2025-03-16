@@ -3,6 +3,9 @@ export const ErrorMessages = {
     EMAIL_IN_USE: "Email already in use",
     INVALID_CREDENTIALS: "Invalid credentials",
     PASSWORD_WEAK: "Password is too weak",
+    USER_NOT_FOUND: "User not found",
+    CONFIRMATION_CODE_EXPIRED: "Confirmation code expired",
+    INVALID_CONFIRMATION_TOKEN: "Invalid confirmation token",
   },
   PROJECT: {
     NOT_FOUND: "Project not found",

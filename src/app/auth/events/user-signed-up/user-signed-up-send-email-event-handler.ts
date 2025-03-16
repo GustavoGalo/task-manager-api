@@ -22,7 +22,7 @@ export class UserSignedUpSendEmailEventHandler
 
     await this.emailService.sendSignUpEmail({
       email: event.email,
-      code: event.confirmationCode,
+      code: event.confirmationToken,
     });
   }
 }
